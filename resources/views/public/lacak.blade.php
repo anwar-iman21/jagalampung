@@ -14,21 +14,15 @@
         <h1 class="mt-1 text-2xl font-extrabold sm:text-3xl">Lacak Laporan</h1>
       </div>
     </div>
-    <p class="mb-6 max-w-lg text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">Masukkan kode lacak dan token rahasia yang Anda simpan saat mengirim laporan.</p>
+    <p class="mb-6 max-w-lg text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">Masukkan kode lacak yang Anda terima saat mengirim laporan.</p>
 
     <form method="POST" action="{{ route('lacak.cek') }}" class="space-y-5 rounded-3xl border border-slate-200 bg-white p-5 shadow-lg shadow-slate-900/5 sm:p-7 dark:border-white/10 dark:bg-white/5">@csrf
       <div>
         <label for="tracking-code" class="mb-2 block text-sm font-bold">Kode lacak</label>
-        <input id="tracking-code" name="code" value="{{ old('code') }}" placeholder="Contoh: JL-2026-XXXXXX" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3.5 text-base transition placeholder:text-slate-400 focus:border-jl-500 focus:bg-white focus:ring-4 focus:ring-jl-100 dark:border-white/15 dark:bg-black/10 dark:focus:bg-black/20" autocomplete="off" required>
+        <input id="tracking-code" name="code" value="{{ old('code') }}" placeholder="Contoh: JL-XXXXXX" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3.5 text-base transition placeholder:text-slate-400 focus:border-jl-500 focus:bg-white focus:ring-4 focus:ring-jl-100 dark:border-white/15 dark:bg-black/10 dark:focus:bg-black/20" autocomplete="off" required>
         @error('code')<p class="shake mt-2 text-sm font-medium text-red-600" role="alert">{{ $message }}</p>@enderror
       </div>
-      <div>
-        <label for="tracking-token" class="mb-2 block text-sm font-bold">Token rahasia</label>
-        <input id="tracking-token" name="token" placeholder="Masukkan token rahasia" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3.5 text-base transition placeholder:text-slate-400 focus:border-jl-500 focus:bg-white focus:ring-4 focus:ring-jl-100 dark:border-white/15 dark:bg-black/10 dark:focus:bg-black/20" autocomplete="off" required>
-        @error('token')<p class="shake mt-2 text-sm font-medium text-red-600" role="alert">{{ $message }}</p>@enderror
-      </div>
       <button class="btn btn-primary w-full rounded-xl py-3 text-base shadow-md shadow-green-700/20">Cek Status <span aria-hidden="true">→</span></button>
-      <p class="text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">Token diperlukan untuk menjaga informasi laporan Anda tetap pribadi.</p>
     </form>
   </div>
   @if ($report)

@@ -21,6 +21,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nik',
+        'nik_hash',
         'password',
     ];
 
@@ -31,6 +33,8 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'nik',
+        'nik_hash',
         'remember_token',
     ];
 
@@ -43,6 +47,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'nik' => 'encrypted',
             'password' => 'hashed',
         ];
     }

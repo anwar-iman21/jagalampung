@@ -26,12 +26,68 @@ Alpine.data('counter', (to = 0) => ({ n: 0,
     this.n = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); },
 }));
 
+Alpine.data('wibClock', () => ({
+  time: '', date: '',
+  init() {
+    const tick = () => {
+      const now = new Date();
+      this.time = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+      }).format(now);
+      this.date = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+      }).format(now) + ' WIB';
+    };
+    tick();
+    setInterval(tick, 1000);
+  },
+}));
+
+Alpine.data('weatherLampung', () => ({
+  days: [], loading: true, error: '',
+  init() { this.load(); },
+  async load() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-5.45&longitude=105.26&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FJakarta&forecast_days=7');
+      if (!response.ok) throw new Error('Respons cuaca tidak tersedia');
+      const data = await response.json();
+      const icons = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌦️', 53: '🌦️', 55: '🌦️', 61: '🌧️', 63: '🌧️', 65: '🌧️', 71: '🌨️', 80: '🌦️', 81: '🌧️', 82: '⛈️', 95: '⛈️', 96: '⛈️', 99: '⛈️' };
+      this.days = data.daily.time.map((date, index) => {
+        const code = data.daily.weather_code[index];
+        const d = new Date(date + 'T12:00:00');
+        return {
+          date,
+          label: new Intl.DateTimeFormat('id-ID', { weekday: 'short', day: 'numeric' }).format(d),
+          icon: icons[code] || '🌦️',
+          temp: `${Math.round(data.daily.temperature_2m_min[index])}–${Math.round(data.daily.temperature_2m_max[index])}°`,
+          rain: `Hujan ${data.daily.precipitation_probability_max[index] ?? 0}%`,
+        };
+      });
+    } catch (error) {
+      this.error = 'Prakiraan cuaca belum dapat dimuat. Periksa koneksi internet Anda.';
+      console.error('Gagal memuat cuaca Lampung:', error);
+    } finally {
+      this.loading = false;
+    }
+  },
+}));
+
 // Lapor Cepat: live GPS and in-browser camera with client-side image compression.
 Alpine.data('lapor', () => ({
   lat: '', lng: '', acc: '', geo: 'Meminta akses GPS berakurasi tinggi…',
   geoUpdatedAt: '', manualLocation: false, geoWatchId: null,
   preview: null, photoBusy: false, photoError: '', cameraOpen: false, cameraBusy: false, cameraError: '',
   cameraStream: null, busy: false,
+  get mapPreviewUrl() {
+    const lat = Number(this.lat);
+    const lng = Number(this.lng);
+    if (!this.lat || !this.lng || !Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return '';
+    const padding = 0.008;
+    const bounds = [lng - padding, lat - padding, lng + padding, lat + padding].join(',');
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bounds)}&layer=mapnik&marker=${encodeURIComponent(`${lat},${lng}`)}`;
+  },
   idem: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
   init() { this.startLocation(); },
   destroy() {

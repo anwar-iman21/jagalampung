@@ -3,8 +3,11 @@
 @section('content')
 <div class="mx-auto max-w-7xl px-4 py-8">
   @include('admin._nav')
-  <div class="flex items-center justify-between"><h1 class="text-2xl font-extrabold">Statistik & Rekap</h1>
-    <a class="btn btn-primary min-h-10" href="{{ route('admin.stats.csv') }}">Ekspor CSV</a></div>
+  <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0"><h1 class="text-2xl font-extrabold">Statistik & Rekap</h1>
+    <div class="flex flex-wrap gap-2">
+      <a class="btn btn-primary min-h-10 w-full sm:w-auto" href="{{ route('admin.stats.csv') }}">Ekspor CSV</a>
+    </div>
+  </div>
   <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     @foreach ([['Total laporan',$s['total']],['Spam / tidak valid',$s['spam_pct'].'%'],['Rata-rata respons',$s['mean_min'] === null ? '—' : round($s['mean_min']).' mnt'],['Median respons',$s['median_min'] === null ? '—' : round($s['median_min']).' mnt']] as [$l,$v])
       <div class="hover-lift rounded-2xl bg-white p-5 shadow dark:bg-white/5"><p class="text-3xl font-extrabold text-jl-600">{{ $v }}</p><p>{{ $l }}</p></div>

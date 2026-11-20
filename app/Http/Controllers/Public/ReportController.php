@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use App\Services\Reports\ReportTrustScorer;
 use App\Services\Reports\TrackingCodeGenerator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 
 class ReportController extends Controller
@@ -82,13 +81,15 @@ class ReportController extends Controller
         ], $data['category']);
 
         $file = $r->file('photo');
-        $token = TrackingCodeGenerator::token();
+        do {
+            $trackingCode = TrackingCodeGenerator::code();
+        } while (Report::where('tracking_code', $trackingCode)->exists());
         // Re-encode lewat GD akan membuang EXIF; fallback: simpan apa adanya (catat di docs).
         $path = $file->store('reports', 'public');
 
         $report = Report::create([
-            'tracking_code' => TrackingCodeGenerator::code(),
-            'token_hash' => Hash::make($token),
+            'tracking_code' => $trackingCode,
+            'user_id' => $r->user()?->id,
             'category' => $data['category'],
             'agency_id' => Agency::forCategory($data['category'])?->id,
             'description' => $data['description'] ?? null,
@@ -101,14 +102,14 @@ class ReportController extends Controller
             'idempotency_key' => $data['idem'] ?: null,
         ]);
 
-        return redirect()->route('lapor.done', $report->tracking_code)->with('token', $token);
+        return redirect()->route('lapor.done', $report->tracking_code);
     }
 
     public function done(Request $r, string $code)
     {
         $report = Report::where('tracking_code', $code)->firstOrFail();
 
-        return view('public.selesai', ['report' => $report, 'token' => session('token')]);
+        return view('public.selesai', ['report' => $report]);
     }
 
     public function trackForm()
@@ -118,11 +119,10 @@ class ReportController extends Controller
 
     public function track(Request $r)
     {
-        $in = $r->validate(['code' => 'required|string|max:30', 'token' => 'required|string|max:40']);
+        $in = $r->validate(['code' => 'required|string|max:20']);
         $report = Report::where('tracking_code', strtoupper(trim($in['code'])))->first();
-        // Pesan sama untuk kode salah maupun token salah (tidak membocorkan keberadaan).
-        if (! $report || ! Hash::check($in['token'], $report->token_hash)) {
-            return back()->withErrors(['code' => 'Kode atau token tidak cocok.'])->withInput();
+        if (! $report) {
+            return back()->withErrors(['code' => 'Kode lacak tidak ditemukan.'])->withInput();
         }
 
         return view('public.lacak', compact('report'));

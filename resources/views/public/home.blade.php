@@ -19,10 +19,40 @@
       </h1>
       <p class="reveal mx-auto mt-6 max-w-2xl text-base leading-relaxed text-green-100 sm:mt-7 sm:text-lg" style="--i:2">Laporkan jalan rusak, bencana, kecelakaan, dan sampah dalam hitungan detik. Pantau penanganannya sampai tuntas.</p>
       <div class="reveal mt-8 flex flex-col items-stretch justify-center gap-3 sm:mt-9 sm:flex-row sm:items-center" style="--i:3">
-        <a href="{{ route('lapor') }}" class="btn hero-cta-primary pulse-soft w-full rounded-2xl px-7 text-base sm:w-auto sm:text-lg">Lapor Sekarang <span aria-hidden="true">→</span></a>
+        <a href="{{ route('lapor') }}" class="btn hero-cta-primary pulse-soft w-full rounded-2xl px-7 text-center text-base sm:w-auto sm:text-lg">Lapor Sekarang</a>
         <a href="{{ route('lacak') }}" class="btn w-full rounded-2xl border border-white/35 bg-white/5 px-7 text-white backdrop-blur transition hover:border-white/60 hover:bg-white/10 sm:w-auto">Lacak Laporan</a>
       </div>
       <p class="reveal mt-5 text-xs font-medium tracking-wide text-green-100/75 sm:text-sm" style="--i:4">Mudah dilaporkan <span class="mx-1 text-green-300">•</span> Transparan dipantau <span class="mx-1 text-green-300">•</span> Untuk Lampung</p>
+    </div>
+  </div>
+</section>
+
+{{-- INFORMASI REALTIME & CUACA --}}
+<section class="mx-auto max-w-7xl px-4 pt-16 sm:pt-20">
+  <div class="grid gap-5 lg:grid-cols-[.75fr_1.25fr]" x-data="weatherLampung">
+    <div class="reveal overflow-hidden rounded-3xl bg-jl-900 p-6 text-white shadow-lg sm:p-8" x-data="wibClock">
+      <p class="text-xs font-bold uppercase tracking-[.16em] text-green-200">Waktu Lampung</p>
+      <p class="mt-4 font-display text-5xl font-extrabold tracking-tight" x-text="time">--:--:--</p>
+      <p class="mt-2 text-sm font-semibold text-green-100" x-text="date">Memuat tanggal…</p>
+      <div class="mt-6 flex items-center gap-2 text-xs font-semibold text-green-200"><span class="h-2 w-2 animate-pulse rounded-full bg-green-300"></span> Pembaruan waktu realtime</div>
+    </div>
+    <div class="reveal rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7 dark:border-white/10 dark:bg-white/5">
+      <div class="flex items-start justify-between gap-4">
+        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-jl-600">Prakiraan cuaca</p><h2 class="mt-1 text-2xl font-extrabold">Lampung 7 hari</h2></div>
+        <button type="button" @click="load" class="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-jl-300 hover:text-jl-700 dark:border-white/10" aria-label="Muat ulang cuaca">↻</button>
+      </div>
+      <p x-show="loading" class="mt-6 text-sm text-slate-500">Memuat prakiraan terkini…</p>
+      <p x-show="error" x-text="error" class="mt-6 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-800 dark:bg-amber-950/30"></p>
+      <div x-show="days.length" class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+        <template x-for="day in days" :key="day.date">
+          <article class="rounded-2xl bg-slate-50 p-3 text-center dark:bg-black/10">
+            <p class="text-xs font-bold text-slate-500" x-text="day.label"></p>
+            <p class="my-2 text-3xl" x-text="day.icon"></p>
+            <p class="text-sm font-extrabold" x-text="day.temp"></p>
+            <p class="mt-1 text-[11px] text-slate-500" x-text="day.rain"></p>
+          </article>
+        </template>
+      </div>
     </div>
   </div>
 </section>
@@ -80,7 +110,7 @@
 <section id="faq" class="mx-auto max-w-3xl px-4 pt-16 sm:pt-24">
   <h2 class="reveal text-center text-2xl font-extrabold sm:text-3xl">Pertanyaan umum</h2>
   <div class="mt-6 space-y-3 sm:mt-8" x-data="{ o: null }">
-    @foreach ([['Perlu login untuk melapor?','Tidak. Anda cukup foto dan kirim. Simpan kode lacak dan token Anda.'],['Kenapa laporan saya belum tampil di peta?','Laporan tampil publik setelah diverifikasi admin.'],['Apakah kontak saya dipublikasikan?','Tidak. Kontak bersifat opsional, disimpan terenkripsi, dan hanya terlihat admin berwenang.']] as $i => [$q,$a])
+    @foreach ([['Perlu login untuk melapor?','Tidak. Anda cukup foto dan kirim. Simpan kode lacak Anda.'],['Kenapa laporan saya belum tampil di peta?','Laporan tampil publik setelah diverifikasi admin.'],['Apakah kontak saya dipublikasikan?','Tidak. Kontak bersifat opsional, disimpan terenkripsi, dan hanya terlihat admin berwenang.']] as $i => [$q,$a])
       <div class="reveal overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5 dark:bg-white/5 dark:ring-white/10">
         <button id="faq-question-{{ $i }}" aria-controls="faq-answer-{{ $i }}" class="flex min-h-14 w-full items-center justify-between gap-4 px-4 py-4 text-left font-bold leading-relaxed sm:min-h-16 sm:px-6" @click="o = o === {{ $i }} ? null : {{ $i }}" :aria-expanded="o === {{ $i }}">
           <span>{{ $q }}</span>

@@ -63,8 +63,13 @@
           <span class="mt-0.5 shrink-0 text-lg text-jl-700 dark:text-jl-500" aria-hidden="true">⌖</span>
           <p class="text-sm font-semibold leading-relaxed text-jl-700 dark:text-jl-500" x-text="geo" role="status"></p>
         </div>
+        <p x-show="mapPreviewUrl" x-cloak class="ml-8 mt-2 break-all font-mono text-xs text-slate-600 dark:text-slate-300" x-text="`${lat}, ${lng}`"></p>
         <button type="button" @click="startLocation" class="ml-8 mt-2 text-xs font-bold text-jl-700 underline underline-offset-2 hover:text-jl-500 dark:text-jl-500">Perbarui lokasi GPS</button>
         <p class="ml-8 mt-1 text-xs leading-relaxed text-slate-500">GPS diperbarui otomatis. Akurasi bergantung pada perangkat dan sinyal; untuk hasil terbaik, aktifkan lokasi presisi dan berada di area terbuka.</p>
+      </div>
+      <div x-show="mapPreviewUrl" x-cloak class="mt-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
+        <iframe :src="mapPreviewUrl" title="Pratinjau lokasi laporan pada peta" class="h-64 w-full border-0" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <p class="bg-slate-50 px-3 py-2 text-xs text-slate-500 dark:bg-white/5">Pratinjau lokasi GPS. Geser peta untuk memeriksa titiknya.</p>
       </div>
       <input type="hidden" name="lat" x-model="lat"><input type="hidden" name="lng" x-model="lng"><input type="hidden" name="accuracy" x-model="acc">
       <details class="mt-4 rounded-xl border border-slate-200 dark:border-white/10" x-bind:open="manualLocation || (!lat && !lng)">

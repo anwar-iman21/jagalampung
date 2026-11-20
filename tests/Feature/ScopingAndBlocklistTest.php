@@ -18,7 +18,7 @@ function mkAdmin(?int $agency, string $role = 'admin'): User
 
 function mkReport(int $agency, string $code): Report
 {
-    return Report::create(['tracking_code' => $code, 'token_hash' => 'x', 'category' => 'sampah', 'lat' => -5.4, 'lng' => 105.2,
+    return Report::create(['tracking_code' => $code, 'category' => 'sampah', 'lat' => -5.4, 'lng' => 105.2,
         'device_hash' => 'd', 'ip_hash' => 'i', 'agency_id' => $agency]);
 }
 

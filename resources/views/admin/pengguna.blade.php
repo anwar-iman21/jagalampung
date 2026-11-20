@@ -7,7 +7,7 @@
     <p class="text-sm font-bold uppercase tracking-[.14em] text-green-200">Pengelolaan akses</p>
     <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
       <div><h1 class="text-3xl font-extrabold sm:text-4xl">Akun Admin</h1><p class="mt-2 text-sm text-green-50 sm:text-base">Kelola akses admin dan penugasan instansi.</p></div>
-      <div class="rounded-2xl border border-white/20 bg-white/10 px-4 py-3"><p class="text-2xl font-extrabold">{{ $users->count() }}</p><p class="text-xs text-green-100">Akun terdaftar</p></div>
+      <div class="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-center"><p class="text-2xl font-extrabold">{{ $users->count() }}</p><p class="text-xs text-green-100">Akun terdaftar</p></div>
     </div>
   </div>
   @if (session('ok'))<p class="mb-5 rounded-2xl border border-jl-100 bg-jl-50 p-4 font-medium text-jl-700" role="status">{{ session('ok') }}</p>@endif

@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\ReportAdminController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\CitizenAuthController;
+use App\Http\Controllers\Public\CitizenDashboardController;
 use App\Http\Controllers\Public\EmergencyController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\MapController;
@@ -25,7 +27,14 @@ Route::get('/darurat', [EmergencyController::class, 'index'])->name('darurat');
 
 Route::get('/masuk', [LoginController::class, 'show'])->name('login');
 Route::post('/masuk', [LoginController::class, 'login'])->middleware('throttle:6,1')->name('login.post');
-Route::post('/keluar', [LoginController::class, 'logout'])->name('logout');
+Route::match(['get', 'post'], '/keluar', [LoginController::class, 'logout'])->name('logout');
+Route::get('/daftar', [CitizenAuthController::class, 'registerForm'])->name('register');
+Route::post('/daftar', [CitizenAuthController::class, 'register'])->middleware('throttle:6,1')->name('register.post');
+
+Route::middleware(['auth', EnsureRole::class.':warga'])->prefix('warga')->group(function () {
+    Route::get('/dashboard', [CitizenDashboardController::class, 'index'])->name('warga.dashboard');
+    Route::get('/laporan/{report}', [CitizenDashboardController::class, 'show'])->name('warga.report');
+});
 
 Route::middleware(['auth', EnsureRole::class.':admin,super_admin'])->prefix('admin')->group(function () {
     Route::get('/laporan', [ReportAdminController::class, 'index'])->name('admin.reports');

@@ -65,6 +65,38 @@
       </section>
 
       <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-6">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold sm:text-lg">Akun pelapor</h2>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Informasi ini hanya untuk admin berwenang.</p>
+          </div>
+          @if ($report->user)
+            <span class="rounded-full bg-jl-50 px-3 py-1 text-xs font-bold text-jl-700 dark:bg-white/10 dark:text-jl-500">Akun warga</span>
+          @else
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-white/10 dark:text-slate-300">Anonim</span>
+          @endif
+        </div>
+        @if ($report->user)
+          <dl class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-2xl bg-slate-50 p-4 dark:bg-white/5">
+              <dt class="text-xs font-bold uppercase tracking-wide text-slate-500">Nama</dt>
+              <dd class="mt-2 break-words font-semibold">{{ $report->user->name }}</dd>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-4 dark:bg-white/5">
+              <dt class="text-xs font-bold uppercase tracking-wide text-slate-500">Email</dt>
+              <dd class="mt-2 break-words font-semibold">{{ $report->user->email }}</dd>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-4 dark:bg-white/5 sm:col-span-2">
+              <dt class="text-xs font-bold uppercase tracking-wide text-slate-500">NIK</dt>
+              <dd class="mt-2 font-mono text-lg font-semibold tracking-wider">{{ $report->user->nik ?: 'Belum tersedia' }}</dd>
+            </div>
+          </dl>
+        @else
+          <p class="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600 dark:bg-white/5 dark:text-slate-300">Laporan ini tidak terhubung ke akun warga.</p>
+        @endif
+      </section>
+
+      <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div><h2 class="font-extrabold sm:text-lg">Skor kepercayaan</h2><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Indikator untuk membantu proses peninjauan.</p></div>
           <div class="text-right"><p class="text-2xl font-extrabold text-jl-700 dark:text-jl-500">{{ $report->trust_score }}<span class="text-sm font-semibold text-slate-400"> / 100</span></p><p class="text-xs font-bold">{{ ucfirst(str_replace('_', ' ', $report->trust_label)) }}</p></div>

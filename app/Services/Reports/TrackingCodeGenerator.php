@@ -13,11 +13,6 @@ class TrackingCodeGenerator
             $s .= self::ALPHABET[random_int(0, strlen(self::ALPHABET) - 1)];
         }
 
-        return 'JL-'.($year ?? date('Y')).'-'.$s;
-    }
-
-    public static function token(): string
-    {
-        return bin2hex(random_bytes(8));
+        return 'JL-'.$s;
     }
 }

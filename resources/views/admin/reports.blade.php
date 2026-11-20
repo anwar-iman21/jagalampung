@@ -4,7 +4,7 @@
 <div class="mx-auto max-w-7xl px-4 py-8 sm:py-10">
   @include('admin._nav')
   <div class="mb-7 rounded-3xl bg-gradient-to-br from-jl-900 via-jl-700 to-jl-600 p-6 text-white shadow-lg shadow-jl-900/10 sm:p-8">
-    <div class="flex flex-wrap items-start justify-between gap-5">
+    <div class="flex flex-wrap items-center justify-between gap-5">
       <div>
         <p class="text-sm font-bold uppercase tracking-[.14em] text-green-200">Panel pengelolaan</p>
         <h1 class="mt-2 text-3xl font-extrabold sm:text-4xl">Antrean Laporan</h1>

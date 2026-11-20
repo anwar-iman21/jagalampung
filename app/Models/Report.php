@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ReportStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Report extends Model
 {
@@ -26,6 +27,11 @@ class Report extends Model
         }
 
         return $user->agency_id ? $q->where('agency_id', $user->agency_id) : $q->whereRaw('1 = 0');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function transitionTo(ReportStatus $to): void

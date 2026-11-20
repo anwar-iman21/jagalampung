@@ -6,12 +6,9 @@
   <h1 class="mt-4 text-2xl font-extrabold">Laporan terkirim</h1>
   <p class="mt-2">Kode lacak Anda:</p>
   <p class="mt-1 text-3xl font-extrabold tracking-wider text-jl-600">{{ $report->tracking_code }}</p>
-  @if ($token)
-    <p class="mt-4">Token rahasia (hanya tampil sekali, simpan!):</p>
-    <p class="mt-1 font-mono text-xl font-bold">{{ $token }}</p>
-    <button class="btn btn-primary mt-4" @click="navigator.clipboard.writeText('{{ $report->tracking_code }} / {{ $token }}'); ok = true">
-      <span x-text="ok ? '✓ Tersalin' : 'Salin kode & token'"></span></button>
-  @endif
+  <button class="btn btn-primary mt-4" @click="navigator.clipboard.writeText('{{ $report->tracking_code }}'); ok = true">
+    <span x-text="ok ? '✓ Kode tersalin' : 'Salin kode lacak'"></span>
+  </button>
   <p class="mt-6 text-sm text-slate-600">Laporan akan diverifikasi admin sebelum tampil publik.</p>
   @if (in_array($report->category, ['kecelakaan', 'bencana']))
     <div class="mt-6 rounded-2xl bg-red-50 p-4 text-red-700">Jika ada korban atau situasi mengancam jiwa, segera hubungi <a class="font-bold underline" href="tel:112">112</a>.</div>

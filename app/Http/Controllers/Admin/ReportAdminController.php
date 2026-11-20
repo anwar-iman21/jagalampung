@@ -40,6 +40,8 @@ class ReportAdminController extends Controller
     public function show(Report $report)
     {
         $this->authorizeReport($report);
+        $report->load('user');
+
         return view('admin.report', [
             'report' => $report,
             'history' => DB::table('report_status_histories')->where('report_id', $report->id)->orderBy('id')->get(),
